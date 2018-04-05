@@ -60,9 +60,7 @@ class TestTextListCleaner(unittest.TestCase):
                  + 'VISUALIZATION VIRTUAL REALITY SEMINAR\n\n\t\t\tTuesday' \
                  + 'June 22 1993\n\n\t    Carderock Division Naval Surface' \
                  + 'Warfare Center\n\t    formerly the David Taylor Research' \
-                 + 'Center\n\t\t\t  Bethesda Maryland\n\nSP.'
-                 
-        print(text_list_no_punct)         
+                 + 'Center\n\t\t\t  Bethesda Maryland\n\nSP.'                         
         self.assertTrue(string1_no_punct in text_list_no_punct)  
 
     def test_remove_tab_from_text(self):
@@ -240,8 +238,6 @@ class TestKerasTextListPreparer(unittest.TestCase):
             x_training_data,y_training_data = keras_text_list_preparer_obj.create_training_data()            
             self.assertEqual(keras_text_list_preparer_obj.word_to_index_dict['SENTENCE_START'],2) 
             self.assertEqual(keras_text_list_preparer_obj.word_to_index_dict['SENTENCE_END'],4)
-            print(x_training_data[0])
-            print(x_training_data[1])
             self.assertCountEqual(x_training_data[0],[2, 3, 10, 5, 6, 10, 1, 9, 10, 10, 10, 4])
             self.assertCountEqual(x_training_data[1], [2, 10, 10, 10, 3, 8, 5, 6, 7, 1, 10, 4])    
             self.assertTrue(np.array_equal(y_training_data,np.array([0,1])))
@@ -274,7 +270,6 @@ class TestKerasTextListPreparer(unittest.TestCase):
             self.assertCountEqual(
                                   x_pad_training_data[1],
                                   [2, 10, 10, 10, 3, 8, 5, 6, 7, 1, 10, 4, 0, 0])  
-
 
 
 if __name__=='__main__':

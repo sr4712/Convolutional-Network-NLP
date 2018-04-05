@@ -62,7 +62,6 @@ class TestModelBuilder(unittest.TestCase):
                          {'embedding_directory':'/Volumes/GLOVE/glove.6B',
                           'embedding_file':'glove.6B.100d.txt'
                           })                       
-
        
     def test_load_corpus(self):
         text_list_test = self.model_builder_obj.load_corpus()
@@ -72,6 +71,7 @@ class TestModelBuilder(unittest.TestCase):
                           'A very very very slow-moving aimless movie about a distressed drifting young man.', 
                           'Not sure who was more lost - the flat characters or the audience nearly half of whom walked out.'
                           ])
+    
     def test_load_labels(self):
         labels_test = self.model_builder_obj.load_labels()
         print(labels_test[0:2])

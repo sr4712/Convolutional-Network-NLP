@@ -6,7 +6,6 @@ import nose
 import numpy as np
 from keras.models import Model
 import keras.callbacks
-import re
 import keras_model.keras_model as km
 
 
@@ -45,7 +44,6 @@ class TestConvolutionModel(unittest.TestCase):
         self.assertEqual(self.conv_model_obj.embed_dim,200)
         self.assertEqual(self.conv_model_obj.model_type,'CNN-rand')
 
-
     def test_build_model_architecture(self):
         self.assertIsInstance(self.conv_model_architecture,Model)
 
@@ -81,7 +79,6 @@ class TestConvolutionModel(unittest.TestCase):
                         [1, 2500, 8, 2041, 0, 0, 0, 0]
                         ]
                          ))
-        print(y_train)
         self.assertTrue(np.array_equal(
                       y_train,
                       np.array([0,1,0])
@@ -95,7 +92,8 @@ class TestConvolutionModel(unittest.TestCase):
         self.assertTrue(np.array_equal(
                 y_val,
                 np.array([1,1])
-                ))        
+                ))
+        
     def test_check_pretrained_word_embeddings_inputs_match(self):
         self.assertRaises(
                 ValueError,
@@ -125,7 +123,7 @@ class TestConvolutionModel(unittest.TestCase):
                    'embedding_matrix':None
                    })    
 
- 
+    
 class TestWordEmbedder(unittest.TestCase):
         
     def setUp(self):
