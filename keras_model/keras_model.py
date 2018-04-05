@@ -5,8 +5,8 @@ from abc import ABCMeta,abstractmethod
 import numpy as np
 import os
 from keras import optimizers, regularizers
-from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Flatten, Input, MaxPooling1D, Convolution1D, Embedding, LSTM, TimeDistributed
+from keras.models import Model
+from keras.layers import Dense, Dropout, Flatten, Input, MaxPooling1D, Convolution1D, Embedding
 from keras.layers.merge import Concatenate
     
 
@@ -25,7 +25,9 @@ class LanguageModel(metaclass = ABCMeta):
         validation_split: fraction of data that should be reserved
                           for validating model when building it 
                           (float between 0 and 1)
-        optimizer: optimizer to use when minizing loss function
+        learning_rate: learning rate for optimizer
+        learning_rate_decay: learning rate decay for optimizer
+        optimizer_type: optimizer to use when minizing loss function
         loss: type of loss to use when building model
         metrics: metric to use when building model        
         '''
@@ -138,11 +140,17 @@ class ConvolutionModel(LanguageModel):
     
     # Arguments:
         embed_dim: embedding dimension for word vectors 
-        mask_zero: whether to mask a value (default 0) when training (T,F)
-        trainable: whether embedding matrix should be trainingable (T,F)
-        lstm_hidden_dim: dimension of hidden layer for LSTM unit
-        return_sequences: whether to return the full sequences (T,F)
-        activation: activation functio nto use in output layer   
+        model_type: 'CNN-static'|'CNN-non-static'|'CNN-rand'
+        filter_sizes: filter_sizes for convolution layers
+        num_filter: number of filters for convolution layer (int)
+        pool_size: the pooling size for pooling step in convolutional layer (int)
+        dropout_prob_for_embed_layer: the dropout probability for the embedding layer 
+        dropout_prob_for_concat_layer: the dropout probability for the concatenation layer
+        dropout_prob_for_hidden_layer: the dropout probability for the hidden layer
+        hidden_dims: dimension of hidden unit layer
+        dense_layer_regularization: regularization value for dense layer 
+        conv_regularization: regularization value for convolution layer
+        embedding_matrix: word embedding matrix
     '''
 
     def __init__(self, *args, **kwargs):    
@@ -159,7 +167,6 @@ class ConvolutionModel(LanguageModel):
         self.conv_regularization = kwargs.pop('conv_regularization',0)
         self.embedding_matrix = kwargs.pop('embedding_matrix',None)
         super(ConvolutionModel, self).__init__(*args, **kwargs)
-
 
     def check_pretrained_word_embeddings_inputs_match(self):
         if (self.model_type in ['CNN-static','CNN-non-static']) and self.embedding_matrix is None:
@@ -201,7 +208,6 @@ class ConvolutionModel(LanguageModel):
 
         model_build_step = Dropout(self.dropout_prob_for_concat_layer)(model_build_step)
         model_build_step = Dense(self.hidden_dims,kernel_regularizer = regularizers.l2(self.dense_layer_regularization), activation="relu")(model_build_step)
-
         model_build_step = Dropout(self.dropout_prob_for_hidden_layer)(model_build_step)
         conv_model_output = Dense(1, activation="sigmoid")(model_build_step)
 
