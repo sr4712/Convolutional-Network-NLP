@@ -141,8 +141,8 @@ class ModelBuilder:
 
 
 if __name__=='__main__':    
-    conf = {'corpus_filename':'sa_labelled_sentences.pickle',
-            'labels_filename':'sentence_labels.pickle',
+    conf = {'corpus_filename':'required_objects/sa_labelled_sentences.pickle',
+            'labels_filename':'required_objects/sentence_labels.pickle',
           'text_proc_params':{
                   'sentence_start_token':'SENTENCE_START',
                   'sentence_end_token':'SENTENCE_END',
