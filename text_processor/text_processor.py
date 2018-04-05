@@ -68,7 +68,6 @@ class TextListCleaner:
         '''
         sentence_list = list([nltk.sent_tokenize(x) for x in self.clean_text()])
         sentence_list = list(itertools.chain(*sentence_list))
-        #sentence_list = list(itertools.chain(*[nltk.sent_tokenize(x) for x in self.clean_text()]))
         return(sentence_list)
     
 
@@ -85,6 +84,7 @@ class KerasTextListPreparer:
         pad_token: a token for the padding input
         vocab_size: vocab_size for keras model
         num_timesteps: numer of timesteps in a sequence 
+        classification_labels: classification labels for sentence
     
     '''
     
@@ -171,7 +171,6 @@ class KerasTextListPreparer:
         return(index_to_word_dict)
 
     def create_training_sentences(self):
-        # Replace all words not in our vocabulary with the unknown token
         if self.tokenize_sentences or self.word_to_index_dict:
             training_sentences = []
             for i, sent in enumerate(self.tokenize_sentences):
@@ -193,36 +192,10 @@ class KerasTextListPreparer:
         y_train_all_samples = np.asarray(self.classification_labels)
         return(x_train_all_samples,y_train_all_samples)
     
-    '''
-    def create_training_data_text_generation(self):
-        training_sentences = self.create_training_sentences()        
-        x_train_all_samples = np.asarray([[
-                                           self.word_to_index_dict[w] for w in sent[:-1]] 
-                                           for sent in training_sentences
-                                           ])
-        y_train_all_samples = np.asarray([[
-                                           self.word_to_index_dict[w] for w in sent[1:]] 
-                                           for sent in training_sentences
-                                           ])
-        return(x_train_all_samples,y_train_all_samples)
-    '''
-    
     def create_padded_training_data(self):        
         x_train_all_samples, y_train_all_samples=self.create_training_data()
         x_train_all_samples = sequence.pad_sequences(
                                 x_train_all_samples, maxlen = self.num_timesteps, padding = 'post',
                                 truncating = 'post', value=0)           
         return(x_train_all_samples,y_train_all_samples)
-    
-    '''
-    def create_padded_training_data_text_generation(self):        
-        x_train_all_samples, y_train_all_samples=self.create_training_data_text_generation()
-        x_train_all_samples = sequence.pad_sequences(
-                                x_train_all_samples, maxlen = self.num_timesteps, padding = 'post',
-                                truncating = 'post', value=0)   
-        y_train_all_samples = sequence.pad_sequences(
-                                y_train_all_samples, maxlen = self.num_timesteps,padding = 'post',
-                                truncating = 'post', value = 0)        
-        return(x_train_all_samples,y_train_all_samples)    
-   '''
 
